@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native';
 import api from '../../services/api';
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/LogoText.png';
 import styles from './styles';
@@ -43,10 +43,6 @@ export default function Main() {
                 <Image source={logoImg} />
             </View>
         
-            {/* <Text style={styles.title}>
-                Ações
-            </Text> */}
-
             <FlatList 
                 data={events} 
                 keyExtractor={event => String(event.id)}
@@ -55,24 +51,52 @@ export default function Main() {
                 renderItem={({ item: event }) => (
                     
                     <View style={styles.event}>
-                        <View>  
+                        
+                        <View style={styles.eventImageTitle}>
+                            {/* Image */}
                             <Image style={styles.eventPersonImagem} source={{ uri: event.person.image_url }} />
-                        </View>
+                            <View>
+                                {/* Title */}
+                                <Text style={styles.eventTitle}>{event.title}</Text>
+                                <View style={styles.eventData}>
+                                {/* Participantes */}
+                                <View style={styles.flexRow}>
+                                    <Feather name="calendar" size={16} color="#3498DB" style={styles.footerIcon} />
+                                    <Text style={styles.eventDataText}>{new Date(event.start_date).toLocaleDateString()} {event.start_time.toString().substring(0, 5)}</Text>
+                                </View>
+                                <Text style={styles.eventDataText}> Por {event.person.name}</Text>
+                            </View>
 
+                            </View>
+                        </View>
+                        
                         <View>
-                            <Text style={styles.eventTitle}>{event.title}</Text>
-                            <Text style={styles.eventDescription}>{event.description}</Text>
+                            {/* Description */}
+                            <View>
+                                <Text style={styles.eventDescription}>{event.description}</Text>
+                            </View>
 
                             <View style={styles.eventFooter}>
-                                {/* Mensagens */}
-                                <Feather name="message-square" size={18} color="#3498DB" style={styles.footerIcon} />
-                                <Text style={styles.footerInfo}>0</Text>
-                                {/* Participantes */}
-                                <Feather name="user" size={18} color="#3498DB" style={styles.footerIcon} />
-                                <Text style={styles.footerInfo}>{event.participants.length}</Text>
-                                {/* Participantes */}
-                                <Feather name="calendar" size={18} color="#3498DB" style={styles.footerIcon} />
-                                <Text style={styles.footerInfo}>{new Date(event.start_date).toLocaleDateString()} {event.start_time.toString().substring(0, 5)}</Text>
+                                {/* Messages */}
+                                <View style={styles.flexRow}>
+                                    <Feather name="message-square" size={18} color="#3498DB" style={styles.footerIcon} />
+                                    <Text style={styles.footerInfo}>0</Text>
+                                </View>
+                                {/* Members */}
+                                <View style={styles.flexRow}>
+                                    <Feather name="user" size={18} color="#3498DB" style={styles.footerIcon} />
+                                    <Text style={styles.footerInfo}>{event.participants.length}</Text>
+                                </View>
+                                {/* Participation */}
+                                <View style={styles.flexRow}>
+                                    {event.person_participates === true ? <Ionicons name="md-heart" size={20} color="#d9534f"/>
+                                    :<Ionicons name="md-heart" size={20} color="#ccc"/>}
+                                </View>
+                                {/* - Participate Button - */}
+                                <View style={styles.flexRow}>
+                                    {event.person_participates === false ? <TouchableOpacity><Feather name="thumbs-up" color="#3498DB" size={20}/></TouchableOpacity>
+                                    :<TouchableOpacity><Feather name="thumbs-down" color="#E02041" size={20}/></TouchableOpacity>}
+                                </View>
                             </View>
 
                             <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(event)}>

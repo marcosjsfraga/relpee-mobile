@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 
 export default StyleSheet.create({
+
     container: {
         flex: 1,
         paddingHorizontal: 10,
@@ -31,15 +32,20 @@ export default StyleSheet.create({
     },
 
     event: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        padding: 10,
+        // flexDirection: 'row',
+        paddingTop: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 10,
         backgroundColor: '#fff',
-        // marginBottom: 1,
-        // borderTopColor: '#e6ecf0',
-        // borderTopWidth: 1,
         borderBottomColor: '#e6ecf0',
         borderBottomWidth: 1,
+    },
+
+    eventImageTitle: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
 
     eventPersonImagem: {
@@ -52,26 +58,41 @@ export default StyleSheet.create({
 
     eventTitle: {
         fontSize: 16,
-        color: '#41414d',
+        color: '#000',
         fontWeight: 'bold',
     },
 
     eventDescription: {
         fontSize: 14,
-        color: '#41414d',
+        color: '#000',
         marginTop: 8,
         marginBottom: 24,
-        paddingRight: 40,
-        // justifyContent: 'space-around'
+        // paddingRight: 10,
+        flex: 1,
+        flexWrap: 'wrap',
+    },
+
+    eventData: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        color: '#41414d',
+        marginBottom: 5,
+        fontSize: 12,
+        // marginRight: 90,
+    },
+
+    eventDataText: {
+        fontSize: 12,
+        color: '#41414d',
     },
 
     eventFooter: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
         color: '#41414d',
         marginBottom: 20,
-
     },
 
     footerIcon: {
@@ -95,7 +116,10 @@ export default StyleSheet.create({
         color: '#E02041',
         fontSize: 15,
         fontWeight: 'bold',
-    }
+    },
 
+    flexRow: {
+        flexDirection: 'row',
+    },
 
 });

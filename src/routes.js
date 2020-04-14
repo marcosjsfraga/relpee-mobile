@@ -5,12 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 const AppStack = createStackNavigator();
 
 import Main from './pages/Main';
+import EventDetail from './pages/EventDetail';
 
 export default function Routes() {
     return(
         <NavigationContainer>
             <AppStack.Navigator screenOptions={{ headerShown: false }}>
-                <AppStack.Screen name="Ações" component={Main}/>
+                <AppStack.Screen name="Main" component={Main}/>
+                <AppStack.Screen name="EventDetail" component={EventDetail}/>
             </AppStack.Navigator>
         </NavigationContainer>
     );

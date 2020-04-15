@@ -3,7 +3,7 @@ import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput } from 're
 import api from '../../services/api';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-import logoImg from '../../assets/LogoText.png';
+import logoImg from '../../assets/LogoTextLogin.png';
 import styles from './styles';
 
 // https://blog.rocketseat.com.br/fluxo-de-autenticacao-com-react-native/
@@ -50,7 +50,7 @@ export default function Login() {
 
                 <TextInput style={styles.textInput} 
                            placeholder="Email" 
-                           autoFocus={true} 
+                           autoFocus={false} 
                            autoCapitaliz ='none' 
                            onChangeText={email_login => onChangeEmailLogin(email_login)} value={email_login}
                            />

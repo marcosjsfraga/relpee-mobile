@@ -31,11 +31,11 @@ export default StyleSheet.create({
         height: 40,
         alignSelf: 'stretch',
         alignContent: 'center',
-        fontSize: 16,
+        fontSize: 18,
     },
 
     loginButtom: {
-        fontSize: 19,
+        fontSize: 18,
         fontWeight: 'bold',
         marginHorizontal: 20,
         marginTop: 40,

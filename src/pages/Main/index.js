@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, Image, Text, AsyncStorage, TouchableOpacity } from 'react-native';
 import api from '../../services/api';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import styles from './styles';
 
 export default function Main() {
     const [events, setEvents] = useState([]);
-    const personId = 1;
+    const personId = AsyncStorage.getItem("@Relpee:personId").toString();
     const navigation = useNavigation();
 
     /**
@@ -30,6 +30,7 @@ export default function Main() {
      */
     async function loadEvents() {
         const response = await api.get(`event/list/${personId}`);
+        console.log('--> PersonId: ' + personId.toString());
         setEvents(response.data);
     }
 

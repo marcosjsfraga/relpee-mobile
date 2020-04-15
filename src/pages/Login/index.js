@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput } from 'react-native';
+import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput, Keyboard, Alert} from 'react-native';
 import api from '../../services/api';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
@@ -20,19 +20,20 @@ export default function Login() {
     async function loginHandler() {
         try {
             const response = await api.post('session/validate', { email_login, password });
-            // await AsyncStorage.setItem('personId', response.data.personId);
-            // await AsyncStorage.setItem('personName', response.data.personName);
-            // await AsyncStorage.setItem('imageUrl', response.data.imageUrl);
-            // await AsyncStorage.setItem('personAddress', response.data.personAddress);
 
-            // const personId = await AsyncStorage.getItem('personId');
-            console.log('--> personId: ' + response.data.personId);
-            
+            Keyboard.dismiss();
+            // Persist data in internal storage
+            await AsyncStorage.setItem("@Relpee:personId", parseFloat(response.data.personId).toString());
+            await AsyncStorage.setItem('@Relpee:personName', response.data.personName);
+            await AsyncStorage.setItem('@Relpee:imageUrl', response.data.imageUrl);
+            await AsyncStorage.setItem('@Relpee:personAddress', response.data.personAddress);
+
             // Send to specific page
-            // navigation.navigate('Main');
+            navigation.navigate('Main');
 
         } catch (error) {
             // alert('Falha no login');
+            Alert.alert('Email ou senha inválida.');
             console.log('Email ou senha inválida.' + error);
         }
     }

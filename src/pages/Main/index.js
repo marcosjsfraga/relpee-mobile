@@ -7,10 +7,10 @@ import logoImg from '../../assets/LogoText.png';
 import styles from './styles';
 
 export default function Main() {
-    const [events, setEvents] = useState([]);
-    const personId = AsyncStorage.getItem("@Relpee:personId").toString();
+    const [events, setEvents] = useState([]);    
     const navigation = useNavigation();
-
+    let personId = '';
+    
     /**
      * ...
      */
@@ -29,8 +29,9 @@ export default function Main() {
      * Get events from server
      */
     async function loadEvents() {
+        personId = await AsyncStorage.getItem("@Relpee:personId");
+
         const response = await api.get(`event/list/${personId}`);
-        console.log('--> PersonId: ' + personId.toString());
         setEvents(response.data);
     }
 

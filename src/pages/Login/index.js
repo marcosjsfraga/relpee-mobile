@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput, Keyboard, Alert} from 'react-native';
 import api from '../../services/api';
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, componentDidMount } from '@react-navigation/native';
 import logoImg from '../../assets/LogoTextLogin.png';
 import styles from './styles';
 
@@ -11,19 +11,30 @@ import styles from './styles';
 export default function Login() {
     const [email_login, onChangeEmailLogin] = React.useState('');
     const [password, onChangePassword] = React.useState('');
-
     const navigation = useNavigation();
+    let personId = '';
+
+    async function componentDidMount() {
+        personId = await AsyncStorage.getItem("@Relpee:personId");
+
+        console.log('personId:' + personId);
+
+        if (personId !== '') 
+            navigation.navigate('Main');
+    }
 
     /**
      * Login
      */
     async function loginHandler() {
         try {
-            const response = await api.post('session/validate', { email_login, password });
 
+            // Validate account
+            const response = await api.post('session/validate', { email_login, password });
+            // Close virtual keyboard
             Keyboard.dismiss();
             // Persist data in internal storage
-            await AsyncStorage.setItem("@Relpee:personId", parseFloat(response.data.personId).toString());
+            await AsyncStorage.setItem("@Relpee:personId", response.data.personId.toString());
             await AsyncStorage.setItem('@Relpee:personName', response.data.personName);
             await AsyncStorage.setItem('@Relpee:imageUrl', response.data.imageUrl);
             await AsyncStorage.setItem('@Relpee:personAddress', response.data.personAddress);
@@ -33,8 +44,8 @@ export default function Login() {
 
         } catch (error) {
             // alert('Falha no login');
-            Alert.alert('Email ou senha inválida.');
-            console.log('Email ou senha inválida.' + error);
+            Alert.alert('Email ou senha inválidos.');
+            console.log('Email ou senha inválidos.' + error);
         }
     }
 

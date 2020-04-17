@@ -1,27 +1,26 @@
-import React from 'react';
-import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput, Keyboard, Alert} from 'react-native';
+import React, { Component } from 'react';
+import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput, Keyboard, Alert } from 'react-native';
 import api from '../../services/api';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation, componentDidMount } from '@react-navigation/native';
 import logoImg from '../../assets/LogoTextLogin.png';
 import styles from './styles';
 
-// https://blog.rocketseat.com.br/fluxo-de-autenticacao-com-react-native/
-
-export default function Login() {
+export default function Login()  {
     const [email_login, onChangeEmailLogin] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const navigation = useNavigation();
     let personId = '';
+    // console.log('--> load...');
 
-    async function componentDidMount() {
-        personId = await AsyncStorage.getItem("@Relpee:personId");
-
-        console.log('personId:' + personId);
-
-        if (personId !== '') 
-            navigation.navigate('Main');
-    }
+    // AsyncStorage.clear();
+    // AsyncStorage.getItem('@Relpee:personId', (err, result) => {
+    //     personId = result;
+    //     console.log('--> personId: ' + personId);
+    //     if (personId !== null) {
+    //         navigation.navigate('Main');
+    //     }
+    // });         
 
     /**
      * Login
@@ -49,7 +48,6 @@ export default function Login() {
         }
     }
 
-
     /**
      * Render
      */
@@ -63,8 +61,9 @@ export default function Login() {
                 <TextInput style={styles.textInput} 
                            placeholder="Email" 
                            autoFocus={false} 
-                           autoCapitaliz ='none' 
-                           onChangeText={email_login => onChangeEmailLogin(email_login)} value={email_login}
+                           autoCapitalize ='none' 
+                           onChangeText={email_login => onChangeEmailLogin(email_login)} 
+                           value={email_login}
                            />
 
                 <TextInput style={styles.textInput} 

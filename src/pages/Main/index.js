@@ -10,13 +10,33 @@ export default function Main() {
     const [events, setEvents] = useState([]);    
     const navigation = useNavigation();
     let personId = '';
-    
+
+    AsyncStorage.getItem('@Relpee:personId', (err, result) => {
+        personId = result;
+    });         
+
     /**
      * ...
      */
     useEffect(() => {
         loadEvents();
     }, []);
+
+    /**
+     * Set participation in event
+     */
+    async function participate(event) {
+        const response = await api.post(`event/participate/${event.id}/${personId}/`);
+        loadEvents();
+    }
+
+    /**
+     * Unset participation in event
+     */
+    async function unparticipate(event) {
+        const response = await api.post(`event/unparticipate/${event.id}/${personId}/`);
+        loadEvents();
+    }
 
     /**
      * Send to event details page
@@ -96,8 +116,8 @@ export default function Main() {
                                 </View>
                                 {/* - Participate Button - */}
                                 <View style={styles.flexRow}>
-                                    {event.person_participates === false ? <TouchableOpacity><Feather name="thumbs-up" color="#3498DB" size={20}/></TouchableOpacity>
-                                    :<TouchableOpacity><Feather name="thumbs-down" color="#E02041" size={20}/></TouchableOpacity>}
+                                    {event.person_participates === false ? <TouchableOpacity onPress={() => participate(event)}><Feather name="thumbs-up" color="#3498DB" size={20}/></TouchableOpacity>
+                                    :<TouchableOpacity onPress={() => unparticipate(event)}><Feather name="thumbs-down" color="#E02041" size={20}/></TouchableOpacity>}
                                 </View>
                             </View>
 

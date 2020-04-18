@@ -1,26 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { View, Image, Text, AsyncStorage, TouchableOpacity, TextInput, Keyboard, Alert } from 'react-native';
 import api from '../../services/api';
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { useNavigation, componentDidMount } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/LogoTextLogin.png';
 import styles from './styles';
 
 export default function Login()  {
-    const [email_login, onChangeEmailLogin] = React.useState('');
-    const [password, onChangePassword] = React.useState('');
+    const [email_login, onChangeEmailLogin] = useState('');
+    const [password, onChangePassword] = useState('');
     const navigation = useNavigation();
-    let personId = '';
-    // console.log('--> load...');
+
+    AsyncStorage.getItem('@Relpee:personId', (err, result) => {
+        if (result !== null) {
+            // Send to specific page
+            navigation.navigate('Main');
+        }
+    });   
 
     // AsyncStorage.clear();
-    // AsyncStorage.getItem('@Relpee:personId', (err, result) => {
-    //     personId = result;
-    //     console.log('--> personId: ' + personId);
-    //     if (personId !== null) {
-    //         navigation.navigate('Main');
-    //     }
-    // });         
 
     /**
      * Login
@@ -70,7 +67,8 @@ export default function Login()  {
                            placeholder="Senha" 
                            secureTextEntry={true} 
                            password={true} 
-                           onChangeText={password => onChangePassword(password)} value={password}
+                           onChangeText={password => onChangePassword(password)} 
+                           value={password}
                            />
 
                 <TouchableOpacity style={styles.loginButtom} title="Entrar" onPress={loginHandler}>

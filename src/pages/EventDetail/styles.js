@@ -20,7 +20,7 @@ export default StyleSheet.create({
     },
 
     title: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
         marginTop: 36,
@@ -28,16 +28,25 @@ export default StyleSheet.create({
     },
 
     event: {
-        padding: 24,
+        padding: 26,
         borderRadius: 8,
         backgroundColor: '#fff',
         marginBottom: 16,
     },
 
     eventTitle: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#41414d',
         fontWeight: 'bold',
+        marginBottom: 16,
+    },
+
+    label: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        // marginTop: 15,
+        color: '#a1a1a1',
     },
 
     eventDescription: {

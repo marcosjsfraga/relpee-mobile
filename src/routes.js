@@ -9,6 +9,7 @@ const AppTabs = createBottomTabNavigator();
 import Login from './pages/Login';
 import Main from './pages/Main';
 import EventDetail from './pages/EventDetail';
+import Profile from './pages/Profile';
 
 export default function Routes() {
     return(
@@ -17,6 +18,7 @@ export default function Routes() {
                 <AppStack.Screen name="Login" component={Login}/>
                 <AppStack.Screen name="Main" component={Main}/>
                 <AppStack.Screen name="EventDetail" component={EventDetail}/>
+                <AppStack.Screen name="Profile" component={Profile}/>
             </AppStack.Navigator>
         </NavigationContainer>
     );

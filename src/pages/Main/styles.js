@@ -107,9 +107,9 @@ export default StyleSheet.create({
 
     detailsButton: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        paddingRight: 40,
+        // paddingRight: 40,
     },
 
     detailsButtonText: {
@@ -121,5 +121,14 @@ export default StyleSheet.create({
     flexRow: {
         flexDirection: 'row',
     },
+
+    profileImage: {
+        width: 35, 
+        height: 35,        
+        padding: 0,
+        // marginRight: 10,
+        borderRadius: 50,
+    },
+
 
 });

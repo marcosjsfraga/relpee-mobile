@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -10,6 +10,7 @@ export default function EventDetail() {
     const route = useRoute();
     const event = route.params.event;
 
+    
     /**
      * Send to previous page
      */
@@ -31,13 +32,12 @@ export default function EventDetail() {
                 </TouchableOpacity>
             </View>
         
-            <Text style={styles.title}>
-                Detalhes
-            </Text>
-
             <View style={styles.event} >
 
                 <Text style={styles.eventTitle}>{event.title}</Text>
+                <Text style={styles.label}>Início:</Text>
+                <Text style={styles.label}>Término:</Text>
+
                 <Text style={styles.eventDescription}>{event.description}</Text>
 
             </View>

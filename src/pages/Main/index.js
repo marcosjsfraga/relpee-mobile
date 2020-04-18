@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Image, Text, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, FlatList, Image, Text, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import api from '../../services/api';
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/LogoText.png';
 import styles from './styles';
 
 export default function Main() {
-    const [events, setEvents] = useState([]);    
+    const [events, setEvents] = useState([]);
     const navigation = useNavigation();
-    let personId = '';
+    const [imageUrl, setImageUrl] = useState('');
 
-    AsyncStorage.getItem('@Relpee:personId', (err, result) => {
-        personId = result;
-    });         
+    AsyncStorage.getItem('@Relpee:imageUrl', (err, result) => {
+        setImageUrl(result);
+    });   
 
     /**
      * ...
@@ -23,19 +23,76 @@ export default function Main() {
     }, []);
 
     /**
+     * Get events from server
+     */
+    async function loadEvents() {
+        // Get person id from internal storage
+        const id = await AsyncStorage.getItem("@Relpee:personId");
+        // Get events from server
+        const response = await api.get(`event/list/${id}`);
+        // Set data events 
+        setEvents(response.data);
+    }
+
+    /**
      * Set participation in event
      */
     async function participate(event) {
-        const response = await api.post(`event/participate/${event.id}/${personId}/`);
-        loadEvents();
+        Alert.alert(
+            '',
+            'Confirma a participação nesta ação?',
+            [
+                {
+                    text: 'Sim', 
+                    onPress: async () => {
+                        // Get person id from internal storage
+                        const id = await AsyncStorage.getItem("@Relpee:personId");
+                        // Set person as a participant of the event
+                        await api.post(`event/participate/${event.id}/${id}/`);
+                        // Show message
+                        Alert.alert('', 'Parabéns por decidir fazer diferença na vida de outras pessoas.\n ;-D');
+                        // Reload events
+                        loadEvents();
+                    }},
+                {
+                    text: 'Não',
+                    // onPress: () => console.log('Cancel Pressed'),
+                    // style: 'cancel',
+                },
+            ],
+            {cancelable: false},
+        );
     }
 
     /**
      * Unset participation in event
      */
     async function unparticipate(event) {
-        const response = await api.post(`event/unparticipate/${event.id}/${personId}/`);
-        loadEvents();
+        Alert.alert(
+            '',
+            'Confirma o cancelamento de sua participação nesta ação?',
+            [
+                {
+                    text: 'Sim', 
+                    onPress: async () => {
+                        // Get person id from internal storage
+                        const id = await AsyncStorage.getItem("@Relpee:personId");
+                        // Unset person as a participant of the event
+                        await api.post(`event/unparticipate/${event.id}/${id}/`);
+                        // Show message
+                        Alert.alert('', 'Que pena, vamos sentir sua falta.\n :-(');
+                        // Reload events
+                        loadEvents();
+                    }},
+                {
+                    text: 'Não',
+                    // onPress: () => console.log('Cancel Pressed'),
+                    // style: 'cancel',
+                },
+            ],
+            {cancelable: false},
+        );
+
     }
 
     /**
@@ -46,13 +103,10 @@ export default function Main() {
     }
 
     /**
-     * Get events from server
+     * Send to event profile page
      */
-    async function loadEvents() {
-        personId = await AsyncStorage.getItem("@Relpee:personId");
-
-        const response = await api.get(`event/list/${personId}`);
-        setEvents(response.data);
+    function navigateToProfile() {
+        navigation.navigate('Profile');
     }
 
     /**
@@ -60,9 +114,14 @@ export default function Main() {
      */
     return(
         <View style={styles.container}>
-
+            
             <View style={styles.header}>
                 <Image source={logoImg} />
+                {imageUrl ? 
+                <TouchableOpacity onPress={() => navigateToProfile()}>
+                    <Image style={styles.profileImage} source={{ uri: imageUrl }} />
+                </TouchableOpacity>
+                :null}
             </View>
         
             <FlatList 
@@ -79,52 +138,51 @@ export default function Main() {
                             <Image style={styles.eventPersonImagem} source={{ uri: event.person.image_url }} />
                             <View>
                                 {/* Title */}
-                                <Text style={styles.eventTitle}>{event.title}</Text>
-                                <View style={styles.eventData}>
-                                {/* Participantes */}
-                                <View style={styles.flexRow}>
-                                    <Feather name="calendar" size={16} color="#3498DB" style={styles.footerIcon} />
-                                    <Text style={styles.eventDataText}>{new Date(event.start_date).toLocaleDateString()} {event.start_time.toString().substring(0, 5)}</Text>
-                                </View>
-                                <Text style={styles.eventDataText}> Por {event.person.name}</Text>
-                            </View>
+                                <TouchableOpacity style={styles.eventTitle} onPress={() => navigateToDetail(event)}>
+                                    <Text style={styles.eventTitle}>{event.title}</Text>
+                                </TouchableOpacity>
 
+                                <View style={styles.eventData}>
+                                    {/* Participantes */}
+                                    <View style={styles.flexRow}>
+                                        <Feather name="calendar" size={16} color="#3498DB" style={styles.footerIcon} />
+                                        <Text style={styles.eventDataText}>{new Date(event.start_date).toLocaleDateString()} {event.start_time.toString().substring(0, 5)}</Text>
+                                    </View>
+                                    <Text style={styles.eventDataText}> Por {event.person.name}</Text>
+                                </View>
                             </View>
                         </View>
                         
                         <View>
                             {/* Description */}
                             <View>
-                                <Text style={styles.eventDescription}>{event.description}</Text>
+                                <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(event)}>
+                                    <Text style={styles.eventDescription}>{event.description}</Text>
+                                </TouchableOpacity>
                             </View>
 
                             <View style={styles.eventFooter}>
                                 {/* Messages */}
                                 <View style={styles.flexRow}>
-                                    <Feather name="message-square" size={18} color="#3498DB" style={styles.footerIcon} />
+                                    <Feather name="message-square" size={20} color="#3498DB" style={styles.footerIcon} />
                                     <Text style={styles.footerInfo}>0</Text>
                                 </View>
                                 {/* Members */}
                                 <View style={styles.flexRow}>
-                                    <Feather name="user" size={18} color="#3498DB" style={styles.footerIcon} />
+                                    <Feather name="user" size={20} color="#3498DB" style={styles.footerIcon} />
                                     <Text style={styles.footerInfo}>{event.participants.length}</Text>
-                                </View>
-                                {/* Participation */}
-                                <View style={styles.flexRow}>
-                                    {event.person_participates === true ? <Ionicons name="md-heart" size={20} color="#d9534f"/>
-                                    :<Ionicons name="md-heart" size={20} color="#ccc"/>}
                                 </View>
                                 {/* - Participate Button - */}
                                 <View style={styles.flexRow}>
-                                    {event.person_participates === false ? <TouchableOpacity onPress={() => participate(event)}><Feather name="thumbs-up" color="#3498DB" size={20}/></TouchableOpacity>
-                                    :<TouchableOpacity onPress={() => unparticipate(event)}><Feather name="thumbs-down" color="#E02041" size={20}/></TouchableOpacity>}
+                                    {event.person_participates === false ? <TouchableOpacity onPress={() => participate(event)}><FontAwesome5 name="hand-holding-heart" color="#AAA" size={22}/></TouchableOpacity>
+                                    :<TouchableOpacity onPress={() => unparticipate(event)}><FontAwesome5 name="hand-holding-heart" color="#d9534f" size={22}/></TouchableOpacity>}
                                 </View>
                             </View>
 
-                            <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(event)}>
+                            {/* <TouchableOpacity style={styles.detailsButton} onPress={() => navigateToDetail(event)}>
                                 <Text style={styles.detailsButtonText}>Ver detalhes</Text>
-                                <Feather name="arrow-right" size={16} color="#E02041" />
-                            </TouchableOpacity>
+                                <MaterialIcons name="pageview" size={16} color="#E02041" />
+                            </TouchableOpacity> */}
                         </View>
                     </View>
                     
